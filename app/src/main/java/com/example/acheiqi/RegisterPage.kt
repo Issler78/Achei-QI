@@ -1,6 +1,7 @@
 package com.example.acheiqi
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -260,7 +261,10 @@ fun RegisterPage(navController: NavController){
                             text = "Faça o login",
                             fontWeight = FontWeight.Bold,
                             color = QiRed,
-                            fontSize = 15.sp
+                            fontSize = 15.sp,
+                            modifier = Modifier.clickable(onClick = {
+                                navController.navigate("login")
+                            })
                         )
                     }
 

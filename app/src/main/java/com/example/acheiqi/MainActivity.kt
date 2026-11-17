@@ -35,6 +35,10 @@ class MainActivity : ComponentActivity() {
                     composable(route = "register") {
                         RegisterPage(navController = navController)
                     }
+
+                    composable(route = "login") {
+                        LoginPage(navController = navController)
+                    }
                 }
             }
         }
