@@ -1,6 +1,5 @@
 package com.example.acheiqi.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,12 +32,12 @@ import com.example.acheiqi.ui.theme.QiRed
 @Composable
 fun TopBar(navController: NavController){
     // ve qual a tela atual
-    val telaAtual by navController.currentBackStackEntryAsState()
-    val rotaAtual = telaAtual?.destination?.route
+    val currentScreen by navController.currentBackStackEntryAsState()
+    val currentRoute = currentScreen?.destination?.route
 
     val textBtn: String?
     val iconBtn: Int?
-    when(rotaAtual){
+    when(currentRoute){
         "register", "login" -> {
             textBtn = "Mural"
             iconBtn = R.drawable.baseline_house_24
