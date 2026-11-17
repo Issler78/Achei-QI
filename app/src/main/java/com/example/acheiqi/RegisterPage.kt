@@ -223,7 +223,7 @@ fun RegisterPage(navController: NavController){
                         onSelectedOption = { selected ->
                             inputLocationValue = selected
                         },
-                        icon = R.drawable.baseline_person_24,
+                        icon = R.drawable.baseline_location_on_24,
                         modifier = Modifier.align(Alignment.Start)
                     )
 
