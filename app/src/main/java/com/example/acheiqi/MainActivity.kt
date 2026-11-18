@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 // mudar depois a rota inicial para a tela inicial
                 NavHost(
                     navController = navController,
-                    startDestination = "register",
+                    startDestination = "home",
                     modifier = Modifier.padding(innerPadding)
                 ){
                     composable(route = "register") {
@@ -38,6 +38,10 @@ class MainActivity : ComponentActivity() {
 
                     composable(route = "login") {
                         LoginPage(navController = navController)
+                    }
+
+                    composable(route = "home") {
+                        HomePage(navController = navController)
                     }
                 }
             }

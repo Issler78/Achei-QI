@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.acheiqi.ui.theme.QiRed
@@ -22,11 +23,14 @@ import com.example.acheiqi.ui.theme.QiRed
 fun PrimaryButton(
     text: String,
     icon: Int,
-    onClick: () -> Unit
-){
+    onClick: () -> Unit,
+    fontSize: TextUnit = 18.sp
+) {
     Button(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(50.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = QiRed,
@@ -37,11 +41,11 @@ fun PrimaryButton(
             painter = painterResource(icon),
             contentDescription = ""
         )
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
             fontWeight = FontWeight.W900,
-            fontSize = 18.sp
+            fontSize = fontSize
         )
     }
 }

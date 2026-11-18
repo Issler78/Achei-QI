@@ -37,18 +37,22 @@ fun TopBar(navController: NavController){
 
     val textBtn: String?
     val iconBtn: Int?
+    val routeBtn: String?
     when(currentRoute){
         "register", "login" -> {
             textBtn = "Mural"
             iconBtn = R.drawable.baseline_house_24
+            routeBtn = "home"
         }
         "home" -> {
             textBtn = "Cadastrar" // mudar dps que tiver sessão ativa???
             iconBtn = R.drawable.baseline_person_24
+            routeBtn = "register"
         }
         else -> {
             textBtn = "Cadastrar"
             iconBtn = R.drawable.baseline_person_24
+            routeBtn = "register"
         }
     }
 
@@ -104,7 +108,9 @@ fun TopBar(navController: NavController){
 
             // botao de navegacao
             Surface(
-                onClick = {  },
+                onClick = {
+                    navController.navigate(route = routeBtn)
+                },
                 shape = CircleShape,
                 shadowElevation = 5.dp
             ) {
