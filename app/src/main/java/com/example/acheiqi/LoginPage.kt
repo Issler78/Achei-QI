@@ -72,12 +72,18 @@ fun LoginPage(navController: NavController){
                     contentDescription = "",
                     tint = Chumbo,
                     modifier = Modifier.size(18.dp)
+                        .clickable(onClick = {
+                            navController.navigate("home")
+                        })
                 )
                 Spacer(Modifier.width(2.dp))
                 Text(
                     text = "Voltar ao mural sem logar",
                     fontSize = 14.sp,
-                    color = ChumboGrey
+                    color = ChumboGrey,
+                    modifier = Modifier.clickable(onClick = {
+                        navController.navigate("home")
+                    })
                 )
             }
 
