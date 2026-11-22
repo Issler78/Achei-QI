@@ -91,7 +91,7 @@ fun LoginPage(navController: NavController){
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Background),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                 shape = RoundedCornerShape(20.dp),
                 elevation = CardDefaults.elevatedCardElevation(20.dp)
             ) {
@@ -160,7 +160,7 @@ fun LoginPage(navController: NavController){
                     Spacer(modifier = Modifier.height(25.dp))
 
 
-                    // botao cadastrar
+                    // botao logar
                     PrimaryButton(
                         text = "Entrar",
                         icon = R.drawable.outline_login_24,

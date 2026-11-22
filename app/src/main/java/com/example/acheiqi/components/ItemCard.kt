@@ -43,7 +43,7 @@ fun ItemCard(
     onClick: () -> Unit
 ){
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEB)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

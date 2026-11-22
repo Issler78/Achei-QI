@@ -32,7 +32,8 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     icon: Int,
     visualTransformation: VisualTransformation? = null,
-    keyboardOptions: KeyboardOptions? = null
+    keyboardOptions: KeyboardOptions? = null,
+    isTextArea: Boolean = false
 ){
     Text(
         text = textLabel,
@@ -58,7 +59,7 @@ fun CustomTextField(
             fontSize = 16.sp
         )
         },
-        singleLine = true,
+        singleLine = !isTextArea,
         textStyle = TextStyle(fontSize = 16.sp),
         leadingIcon = { Icon(
             painter = painterResource(icon),

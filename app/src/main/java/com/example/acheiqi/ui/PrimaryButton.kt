@@ -22,7 +22,7 @@ import com.example.acheiqi.ui.theme.QiRed
 @Composable
 fun PrimaryButton(
     text: String,
-    icon: Int,
+    icon: Int? = null,
     onClick: () -> Unit,
     fontSize: TextUnit = 18.sp
 ) {
@@ -31,17 +31,22 @@ fun PrimaryButton(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 3.dp
+        ),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = QiRed,
             contentColor = Color.White
         )
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = ""
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        if (icon != null){
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = ""
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         Text(
             text = text,
             fontWeight = FontWeight.W900,

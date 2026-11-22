@@ -1,20 +1,13 @@
 package com.example.acheiqi
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -30,17 +23,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.acheiqi.components.CreateItemModal
 import com.example.acheiqi.components.Footer
 import com.example.acheiqi.components.ItemCard
 import com.example.acheiqi.ui.PrimaryButton
@@ -52,6 +46,11 @@ import com.example.acheiqi.ui.theme.QiRed
 
 @Composable
 fun HomePage(navController: NavController){
+    // modal
+    var isOpenCreateModal by remember { mutableStateOf(false) }
+
+
+
     // map com as categorias e icones
     val categories = mapOf(
         "Todos" to R.drawable.outline_border_all_24,
@@ -64,6 +63,15 @@ fun HomePage(navController: NavController){
     var selectedCategory by remember { mutableIntStateOf(0) }
 
 
+    // create modal
+    if (isOpenCreateModal) {
+        CreateItemModal(
+            onDismiss = { isOpenCreateModal = false }
+        )
+    }
+
+
+    // conteudo principal
     Column(
         modifier = Modifier.fillMaxSize()
             .verticalScroll(rememberScrollState())
@@ -78,14 +86,14 @@ fun HomePage(navController: NavController){
             // card inicial
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Background),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                 elevation = CardDefaults.cardElevation(10.dp)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp, horizontal = 15.dp)
                 ) {
                     Card(
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE1E1)),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFDEDE)),
                         elevation = CardDefaults.cardElevation(10.dp)
                     ) {
                         Text(
@@ -123,8 +131,8 @@ fun HomePage(navController: NavController){
                     Spacer(modifier = Modifier.height(15.dp))
 
                     PrimaryButton(
-                        text = "Cadastrar Objeto Encontrado",
-                        onClick = {},
+                        text = "Publicar Objeto Encontrado",
+                        onClick = { isOpenCreateModal = true },
                         icon = R.drawable.outline_add_24,
                         fontSize = 16.sp
                     )
