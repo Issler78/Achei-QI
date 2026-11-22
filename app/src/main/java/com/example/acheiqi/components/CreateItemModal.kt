@@ -1,7 +1,5 @@
 package com.example.acheiqi.components
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +22,7 @@ import com.example.acheiqi.R
 import com.example.acheiqi.ui.CustomModal
 import com.example.acheiqi.ui.CustomSelectInput
 import com.example.acheiqi.ui.CustomTextField
+import com.example.acheiqi.ui.FileInput
 import com.example.acheiqi.ui.PrimaryButton
 import com.example.acheiqi.ui.SecondaryButton
 
@@ -63,11 +63,14 @@ fun CreateItemModal(
         content = {
             Column(
                 modifier = Modifier.padding(vertical = 15.dp, horizontal = 20.dp)
-                    .scrollable(state = scrollState, orientation = Orientation.Vertical)
+                    .verticalScroll(state = scrollState)
             ) {
                 // formulario
 
                 // input de arquivo
+                FileInput(
+                    modifier = Modifier.align(Alignment.Start)
+                )
 
                 // input nome do objeto
                 CustomTextField(
@@ -142,6 +145,8 @@ fun CreateItemModal(
                         onClick = {}
                     )
                 }
+
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     )
