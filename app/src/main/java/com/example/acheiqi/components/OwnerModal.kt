@@ -1,5 +1,9 @@
 package com.example.acheiqi.components
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,20 +45,27 @@ import com.example.acheiqi.ui.theme.ChumboGrey
 import com.example.acheiqi.ui.theme.ChumboLight
 import com.example.acheiqi.ui.theme.GreenLight
 import com.example.acheiqi.ui.theme.QiRed
+import androidx.core.net.toUri
 
 @Composable
 fun OwnerModal(
     onDismiss: () -> Unit,
     foundObject: Map<String, Any> // mudar dps quando tiver integracao
 ){
+    val localContext = LocalContext.current
     val scrollState = rememberScrollState()
-    val localClipboard = LocalClipboardManager.current
-    val whatsMensage = "“Olá, " + foundObject.getValue("finder") +
+    val localClipboard = LocalClipboardManager.current // area de transferencia para copiar textos
+    val whatsMensage = "Olá, " + foundObject.getValue("finder") +
             "! Vi no AcheiQI que você encontrou meu item: *" +
-            foundObject.getValue("nome") as String + " (achado em " +
+            foundObject.getValue("nome") as String + "* (achado em " +
             foundObject.getValue("loc") as String + " - " +
             foundObject.getValue("qi") as String +
-            "). Onde você está na unidade para eu buscar?”"
+            "). Onde você está na unidade para eu buscar?"
+
+
+
+    // NUMERO PARA TESTE!!
+    val telefone = "555497143067"
 
     CustomModal(
         title = "Falar com quem Encontrou",
@@ -291,7 +303,17 @@ fun OwnerModal(
                     text = "Conversar",
                     icon = R.drawable.outline_whatsapp_24,
                     primaryColor = GreenLight,
-                    onClick = {},
+                    onClick = {
+                        // url para abrir o whats no numero DE TESTE
+                        val url = "https://wa.me/${telefone}?text=${Uri.encode(whatsMensage)}"
+
+                        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                        try {
+                            localContext.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            Toast.makeText(localContext, "WhatsApp não encontrado", Toast.LENGTH_SHORT).show()
+                        }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
