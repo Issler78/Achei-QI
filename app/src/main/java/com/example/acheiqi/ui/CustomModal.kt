@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -48,7 +49,7 @@ fun CustomModal(
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.9f)
+                .heightIn(max = 700.dp)
                 .padding(0.dp)
         ) {
 

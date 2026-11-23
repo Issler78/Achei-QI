@@ -24,7 +24,8 @@ fun PrimaryButton(
     text: String,
     icon: Int? = null,
     onClick: () -> Unit,
-    fontSize: TextUnit = 18.sp
+    fontSize: TextUnit = 18.sp,
+    primaryColor: Color = QiRed
 ) {
     Button(
         onClick = onClick,
@@ -36,7 +37,7 @@ fun PrimaryButton(
         ),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = QiRed,
+            containerColor = primaryColor,
             contentColor = Color.White
         )
     ) {

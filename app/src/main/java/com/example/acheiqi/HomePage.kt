@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import com.example.acheiqi.components.CreateItemModal
 import com.example.acheiqi.components.Footer
 import com.example.acheiqi.components.ItemCard
+import com.example.acheiqi.components.OwnerModal
 import com.example.acheiqi.ui.PrimaryButton
 import com.example.acheiqi.ui.theme.Background
 import com.example.acheiqi.ui.theme.Chumbo
@@ -46,8 +47,22 @@ import com.example.acheiqi.ui.theme.QiRed
 
 @Composable
 fun HomePage(navController: NavController){
+    // OBJETO PARA TESTE - EXCLUIR DPS DA INTEGRACAO COM A API
+    val objeto = mapOf(
+        "imagem" to R.drawable.photo1622560481979f5b0174242a0,
+        "nome" to "Mochila Preta",
+        "cat" to "Material Escolar",
+        "loc" to "Laboratório de Informática - Sala 302",
+        "qi" to "Caxias do Sul",
+        "finder" to "Matheus Issler",
+        "numFinder" to "(54) 99657-3462",
+        "roleFinder" to "Aluno QI"
+    )
+
+
     // modal
     var isOpenCreateModal by remember { mutableStateOf(false) }
+    var isOpenOwnerModal by remember { mutableStateOf(false) }
 
 
 
@@ -64,9 +79,17 @@ fun HomePage(navController: NavController){
 
 
     // create modal
-    if (isOpenCreateModal) {
+    if (isOpenCreateModal){
         CreateItemModal(
             onDismiss = { isOpenCreateModal = false }
+        )
+    }
+
+    // owner modal
+    if(isOpenOwnerModal){
+        OwnerModal(
+            onDismiss = { isOpenOwnerModal = false },
+            foundObject = objeto
         )
     }
 
@@ -202,7 +225,10 @@ fun HomePage(navController: NavController){
                 qi = "Caxias do Sul",
                 location = "Laboratório de Informática - Sala 302",
                 finder = "Matheus Issler",
-                onClick = {}
+                onClick = {
+                    // funcao teste!!! mudar dps quando tiver integracao
+                    isOpenOwnerModal = true
+                }
             )
             ItemCard(
                 title = "Mochila Preta",
