@@ -1,5 +1,6 @@
 package com.example.acheiqi
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,16 +20,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,22 +36,26 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.acheiqi.components.Footer
 import com.example.acheiqi.ui.CustomSelectInput
 import com.example.acheiqi.ui.CustomTextField
 import com.example.acheiqi.ui.PrimaryButton
-import com.example.acheiqi.ui.theme.Background
 import com.example.acheiqi.ui.theme.Chumbo
 import com.example.acheiqi.ui.theme.ChumboGrey
 import com.example.acheiqi.ui.theme.QiRed
 import com.example.acheiqi.utils.PhoneVisualTransformation
+import com.example.acheiqi.viewmodels.RegisterViewModel
 
 @Composable
-fun RegisterPage(navController: NavController){
+fun RegisterPage(navController: NavController, viewModel: RegisterViewModel){
+    val context = LocalContext.current
+    val formState = viewModel.formState
+
     // variaveis para os inputs
-    val roleOptions = listOf("Aluno QI", "Professor QI", "Funcionário / Secretaria")
-    val locationOptions = listOf(
+    val affiliationOptions = listOf("Aluno QI", "Professor QI", "Funcionário QI")
+    val unitOptions = listOf(
         "Alvorada",
         "Canoas",
         "Caxias do Sul",
@@ -67,13 +71,38 @@ fun RegisterPage(navController: NavController){
         "Viamão",
     )
 
-    // variaveis de inputs
-    var inputNameValue by remember { mutableStateOf("") }
-    var inputEmailValue by remember { mutableStateOf("") }
-    var inputPasswordValue by remember { mutableStateOf("") }
-    var inputPhoneValue by remember { mutableStateOf("") }
-    var inputRoleValue by remember { mutableStateOf(roleOptions[0]) }
-    var inputLocationValue by remember { mutableStateOf(locationOptions[0]) }
+
+
+    // mensagem de erro
+    LaunchedEffect(formState.error) {
+        formState.error?.let { errorMessage ->
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
+    }
+
+    // sucesso
+    LaunchedEffect(formState.success) {
+        if (formState.success) {
+            Toast.makeText(
+                context,
+                "Cadastro realizado com sucesso! Para confirmar, realize o login.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            navController.navigate("login") {
+                popUpTo("register") { inclusive = true }
+            }
+        }
+    }
+
+    // tela de loading
+    if (formState.loading) {
+        Dialog(onDismissRequest = {}) {
+            CircularProgressIndicator(color = QiRed)
+        }
+    }
+
 
 
     Column(
@@ -167,8 +196,10 @@ fun RegisterPage(navController: NavController){
                         modifier = Modifier.align(Alignment.Start),
                         textLabel = "NOME COMPLETO *",
                         placeholder = "Ex: Lucas de Souza",
-                        value = inputNameValue,
-                        onValueChange = { inputNameValue = it },
+                        value = formState.name,
+                        onValueChange = { newValue ->
+                            viewModel.updateForm { it.copy(name = newValue) }
+                        },
                         icon = R.drawable.baseline_person_24
                     )
 
@@ -177,8 +208,10 @@ fun RegisterPage(navController: NavController){
                         modifier = Modifier.align(Alignment.Start),
                         textLabel = "E-MAIL *",
                         placeholder = "seuemail@gmail.com",
-                        value = inputEmailValue,
-                        onValueChange = { inputEmailValue = it },
+                        value = formState.email,
+                        onValueChange = { newValue ->
+                            viewModel.updateForm { it.copy(email = newValue) }
+                        },
                         icon = R.drawable.baseline_email_24
                     )
 
@@ -187,8 +220,10 @@ fun RegisterPage(navController: NavController){
                         modifier = Modifier.align(Alignment.Start),
                         textLabel = "SENHA *",
                         placeholder = "Mínimo 6 caracteres",
-                        value = inputPasswordValue,
-                        onValueChange = { inputPasswordValue = it },
+                        value = formState.password,
+                        onValueChange = { newValue ->
+                            viewModel.updateForm { it.copy(password = newValue) }
+                        },
                         icon = R.drawable.outline_lock_24,
                         visualTransformation = PasswordVisualTransformation()
                     )
@@ -198,11 +233,11 @@ fun RegisterPage(navController: NavController){
                         modifier = Modifier.align(Alignment.Start),
                         textLabel = "WHATSAPP (COM DDD) *",
                         placeholder = "(54) 12345-6789",
-                        value = inputPhoneValue,
-                        onValueChange = { value ->
-                            val numbers = value.filter { it.isDigit() }
+                        value = formState.phone,
+                        onValueChange = { newValue ->
+                            val numbers = newValue.filter { it.isDigit() }
                             if (numbers.length <= 11) {
-                                inputPhoneValue = numbers
+                                viewModel.updateForm { it.copy(phone = numbers) }
                             }
                         },
                         icon = R.drawable.outline_whatsapp_24,
@@ -212,11 +247,11 @@ fun RegisterPage(navController: NavController){
 
                     // input vinculo
                     CustomSelectInput(
-                        options = roleOptions,
+                        options = affiliationOptions,
                         textLabel = "VÍNCULO COM A QI *",
-                        selectedText = inputRoleValue,
+                        selectedText = formState.affiliation,
                         onSelectedOption = { selected ->
-                            inputRoleValue = selected
+                            viewModel.updateForm { it.copy(affiliation = selected) }
                         },
                         icon = R.drawable.baseline_person_24,
                         modifier = Modifier.align(Alignment.Start)
@@ -224,11 +259,11 @@ fun RegisterPage(navController: NavController){
 
                     // input localizacao
                     CustomSelectInput(
-                        options = locationOptions,
+                        options = unitOptions,
                         textLabel = "SUA UNIDADE QI *",
-                        selectedText = inputLocationValue,
+                        selectedText = formState.unit,
                         onSelectedOption = { selected ->
-                            inputLocationValue = selected
+                            viewModel.updateForm { it.copy(unit = selected) }
                         },
                         icon = R.drawable.baseline_location_on_24,
                         modifier = Modifier.align(Alignment.Start)
@@ -242,15 +277,7 @@ fun RegisterPage(navController: NavController){
                     PrimaryButton(
                         text = "Cadastrar",
                         icon = R.drawable.outline_login_24,
-                        onClick = {
-                            // aqui vira uma funcao que verifica os campos
-
-                            // aqui vira a chamada para uma funcao de um controller que salvara no banco ???
-
-                            // aqui vira uma funcao para salvar os dados do usuario no SharedPreferences
-
-                            // aqui vira o navigate
-                        }
+                        onClick = { viewModel.register() }
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))

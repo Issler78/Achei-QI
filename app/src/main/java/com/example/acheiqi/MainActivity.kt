@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.acheiqi.components.TopBar
 import com.example.acheiqi.ui.theme.Background
+import com.example.acheiqi.viewmodels.RegisterViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding)
                 ){
                     composable(route = "register") {
-                        RegisterPage(navController = navController)
+                        val registerViewModel: RegisterViewModel = viewModel()
+                        RegisterPage(navController = navController, viewModel = registerViewModel)
                     }
 
                     composable(route = "login") {
