@@ -28,12 +28,16 @@ import com.example.acheiqi.R
 import com.example.acheiqi.ui.theme.Chumbo
 import com.example.acheiqi.ui.theme.ChumboGrey
 import com.example.acheiqi.ui.theme.QiRed
+import com.example.acheiqi.utils.TokenManager
 
 @Composable
 fun TopBar(navController: NavController){
     // ve qual a tela atual
     val currentScreen by navController.currentBackStackEntryAsState()
     val currentRoute = currentScreen?.destination?.route
+
+    // esta logado ou nao
+    val isLoggedIn: Boolean = TokenManager.getToken() != null
 
     val textBtn: String?
     val iconBtn: Int?
@@ -45,14 +49,26 @@ fun TopBar(navController: NavController){
             routeBtn = "home"
         }
         "home" -> {
-            textBtn = "Cadastrar" // mudar dps que tiver sessão ativa???
-            iconBtn = R.drawable.baseline_person_24
-            routeBtn = "register"
+            if (isLoggedIn){
+                textBtn = "Sair"
+                iconBtn = R.drawable.baseline_person_24
+                routeBtn = "login"
+            } else {
+                textBtn = "Cadastrar"
+                iconBtn = R.drawable.baseline_person_24
+                routeBtn = "register"
+            }
         }
         else -> {
-            textBtn = "Cadastrar"
-            iconBtn = R.drawable.baseline_person_24
-            routeBtn = "register"
+            if (isLoggedIn){
+                textBtn = "Sair"
+                iconBtn = R.drawable.baseline_person_24
+                routeBtn = "login"
+            } else {
+                textBtn = "Cadastrar"
+                iconBtn = R.drawable.baseline_person_24
+                routeBtn = "register"
+            }
         }
     }
 
@@ -109,6 +125,9 @@ fun TopBar(navController: NavController){
             // botao de navegacao
             Surface(
                 onClick = {
+                    if(isLoggedIn){
+                        TokenManager.clearToken()
+                    }
                     navController.navigate(route = routeBtn)
                 },
                 shape = CircleShape,

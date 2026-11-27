@@ -46,7 +46,7 @@ import com.example.acheiqi.ui.theme.ChumboLight
 import com.example.acheiqi.ui.theme.QiRed
 
 @Composable
-fun HomePage(navController: NavController){
+fun HomePage(){
     // OBJETO PARA TESTE - EXCLUIR DPS DA INTEGRACAO COM A API
     val objeto = mapOf(
         "imagem" to R.drawable.photo1622560481979f5b0174242a0,

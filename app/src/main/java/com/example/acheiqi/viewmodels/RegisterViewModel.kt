@@ -55,8 +55,6 @@ class RegisterViewModel(
                         400 -> "Este e-mail já está cadastrado."
                         else -> "Erro ao realizar cadastro."
                     }
-                    val errorBody = response.errorBody()?.string()
-                    android.util.Log.e("REGISTER_ERROR", "HTTP ${response.code()}: $errorBody")
                     formState = formState.copy(loading = false, error = error)
 
                 }

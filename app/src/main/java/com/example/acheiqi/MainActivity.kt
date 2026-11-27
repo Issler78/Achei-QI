@@ -15,12 +15,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.acheiqi.components.TopBar
 import com.example.acheiqi.ui.theme.Background
+import com.example.acheiqi.utils.TokenManager
+import com.example.acheiqi.viewmodels.LoginViewModel
 import com.example.acheiqi.viewmodels.RegisterViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        TokenManager.init(this)
+
         setContent {
             val navController = rememberNavController()
             Scaffold(
@@ -40,11 +44,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = "login") {
-                        LoginPage(navController = navController)
+                        val loginViewModel: LoginViewModel = viewModel()
+                        LoginPage(navController = navController, viewModel = loginViewModel)
                     }
 
                     composable(route = "home") {
-                        HomePage(navController = navController)
+                        HomePage()
                     }
                 }
             }
