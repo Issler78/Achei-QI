@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.acheiqi.components.TopBar
 import com.example.acheiqi.ui.theme.Background
 import com.example.acheiqi.utils.TokenManager
+import com.example.acheiqi.viewmodels.CreateItemViewModel
 import com.example.acheiqi.viewmodels.LoginViewModel
 import com.example.acheiqi.viewmodels.RegisterViewModel
 
@@ -49,7 +50,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(route = "home") {
-                        HomePage()
+                        val createItemViewModel: CreateItemViewModel = viewModel()
+                        HomePage(navController = navController, createItemViewModel = createItemViewModel)
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.example.acheiqi
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,9 +46,16 @@ import com.example.acheiqi.ui.theme.Chumbo
 import com.example.acheiqi.ui.theme.ChumboGrey
 import com.example.acheiqi.ui.theme.ChumboLight
 import com.example.acheiqi.ui.theme.QiRed
+import com.example.acheiqi.utils.TokenManager
+import com.example.acheiqi.viewmodels.CreateItemViewModel
 
 @Composable
-fun HomePage(){
+fun HomePage(navController: NavController, createItemViewModel: CreateItemViewModel){
+    val context = LocalContext.current
+
+    // esta logado ou nao
+    val isLoggedIn: Boolean = TokenManager.getToken() != null
+
     // OBJETO PARA TESTE - EXCLUIR DPS DA INTEGRACAO COM A API
     val objeto = mapOf(
         "imagem" to R.drawable.photo1622560481979f5b0174242a0,
@@ -81,7 +90,9 @@ fun HomePage(){
     // create modal
     if (isOpenCreateModal){
         CreateItemModal(
-            onDismiss = { isOpenCreateModal = false }
+            onDismiss = { isOpenCreateModal = false },
+            viewModel = createItemViewModel,
+            navController = navController
         )
     }
 
@@ -155,7 +166,19 @@ fun HomePage(){
 
                     PrimaryButton(
                         text = "Publicar Objeto Encontrado",
-                        onClick = { isOpenCreateModal = true },
+                        onClick = {
+                            if(isLoggedIn){
+                                isOpenCreateModal = true
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Para publicar um objeto, entre em sua conta.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                navController.navigate("login")
+                            }
+
+                        },
                         icon = R.drawable.outline_add_24,
                         fontSize = 16.sp
                     )

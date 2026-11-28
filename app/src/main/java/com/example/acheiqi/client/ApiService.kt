@@ -1,6 +1,7 @@
 package com.example.acheiqi.client
 
-import com.example.acheiqi.dtos.LoginDTO
+import com.example.acheiqi.dtos.CreateItemRequestDTO
+import com.example.acheiqi.dtos.LoginRequestDTO
 import com.example.acheiqi.dtos.LoginResponse
 import com.example.acheiqi.dtos.RegisterRequestDTO
 import retrofit2.Response
@@ -13,5 +14,8 @@ interface ApiService {
     suspend fun register(@Body request: RegisterRequestDTO) : Response<Unit>
 
     @POST("auth/login")
-    suspend fun login(@Body request: LoginDTO) : Response<LoginResponse>
+    suspend fun login(@Body request: LoginRequestDTO) : Response<LoginResponse>
+
+    @POST("items")
+    suspend fun saveItem(@Body request: CreateItemRequestDTO) : Response<Unit>
 }

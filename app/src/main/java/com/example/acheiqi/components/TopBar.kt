@@ -15,9 +15,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,8 +38,14 @@ fun TopBar(navController: NavController){
     val currentScreen by navController.currentBackStackEntryAsState()
     val currentRoute = currentScreen?.destination?.route
 
+    val context = LocalContext.current
+    val token = remember {
+        TokenManager.init(context)
+        TokenManager.getToken()
+    }
+
     // esta logado ou nao
-    val isLoggedIn: Boolean = TokenManager.getToken() != null
+    val isLoggedIn: Boolean = token != null
 
     val textBtn: String?
     val iconBtn: Int?

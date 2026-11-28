@@ -12,10 +12,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -28,16 +24,17 @@ import com.example.acheiqi.ui.theme.GreyLight
 
 @Composable
 fun FileInput(
-    modifier: Modifier
+    modifier: Modifier,
+    image: Uri?,
+    onValueChange: (Uri?) -> Unit
 ){
-    // imagem escolhida
-    var result by remember { mutableStateOf<Uri?>(null) }
-
     // launcher da tela de permissao
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = {
-            result = it
+        onResult = { uri ->
+            if (uri != null) {
+                onValueChange(uri)
+            }
         }
     )
 
@@ -68,15 +65,15 @@ fun FileInput(
         )
     ) {
         Text(
-            text = "Escolha uma foto..."
+            text = if(image == null) "Escolha uma foto..." else "Trocar foto..."
         )
     }
     Spacer(modifier = Modifier.height(5.dp))
 
     // foto escolhida
-    if (result != null){
+    if (image != null){
         AsyncImage(
-            model = result,
+            model = image,
             contentDescription = "",
             modifier = Modifier.fillMaxWidth()
                 .height(250.dp),

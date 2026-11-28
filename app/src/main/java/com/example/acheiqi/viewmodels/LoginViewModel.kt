@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.acheiqi.client.ApiService
 import com.example.acheiqi.client.RetrofitClient
-import com.example.acheiqi.dtos.LoginDTO
+import com.example.acheiqi.dtos.LoginRequestDTO
 import com.example.acheiqi.dtos.LoginResponse
 import com.example.acheiqi.states.LoginFormUiState
 import com.example.acheiqi.utils.TokenManager
@@ -38,7 +38,7 @@ class LoginViewModel(
         viewModelScope.launch {
             formState = formState.copy(error = null, loading = true)
             try {
-                val request = LoginDTO(
+                val request = LoginRequestDTO(
                     email = formState.email.trim(),
                     password = formState.password.trim()
                 )

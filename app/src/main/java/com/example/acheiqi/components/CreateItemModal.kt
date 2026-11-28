@@ -1,5 +1,6 @@
 package com.example.acheiqi.components
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,14 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.example.acheiqi.R
 import com.example.acheiqi.ui.CustomModal
 import com.example.acheiqi.ui.CustomSelectInput
@@ -25,13 +31,20 @@ import com.example.acheiqi.ui.CustomTextField
 import com.example.acheiqi.ui.FileInput
 import com.example.acheiqi.ui.PrimaryButton
 import com.example.acheiqi.ui.SecondaryButton
+import com.example.acheiqi.ui.theme.QiRed
+import com.example.acheiqi.viewmodels.CreateItemViewModel
 
 @Composable
 fun CreateItemModal(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    viewModel: CreateItemViewModel,
+    navController: NavController
 ){
+    val context = LocalContext.current
+    val formState = viewModel.formState
+
     // variaveis para os inputs
-    val categories = listOf("Documento", "Material Escolar", "Eletrônico", "Vestuário", "Outro")
+    val categories = listOf("Documentos", "Materiais Escolares", "Eletrônicos", "Vestuário", "Outro")
     val locationOptions = listOf(
         "Alvorada",
         "Canoas",
@@ -47,15 +60,38 @@ fun CreateItemModal(
         "São Leopoldo",
         "Viamão",
     )
-
     val scrollState = rememberScrollState()
 
-    // variaveis dos inputs (tlvz devera ser na tela de home)
-    var objectInputValue by remember { mutableStateOf("") }
-    var detailsInputValue by remember { mutableStateOf("") }
-    var inputLocationValue by remember { mutableStateOf(locationOptions[0]) }
-    var inputCategoryValue by remember { mutableStateOf(categories[0]) }
-    var inputExactLoc by remember { mutableStateOf("") }
+
+
+    // mensagem de erro
+    LaunchedEffect(formState.error) {
+        formState.error?.let { errorMessage ->
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
+    }
+
+    // sucesso
+    LaunchedEffect(formState.success) {
+        if (formState.success) {
+            Toast.makeText(
+                context,
+                "Objeto publicado com sucesso!",
+                Toast.LENGTH_LONG
+            ).show()
+
+            onDismiss()
+            navController.navigate("home")
+        }
+    }
+
+    // tela de loading
+    if (formState.loading) {
+        Dialog(onDismissRequest = {}) {
+            CircularProgressIndicator(color = QiRed)
+        }
+    }
 
     CustomModal(
         title = "Publicar Objeto Encontrado",
@@ -69,7 +105,11 @@ fun CreateItemModal(
 
                 // input de arquivo
                 FileInput(
-                    modifier = Modifier.align(Alignment.Start)
+                    modifier = Modifier.align(Alignment.Start),
+                    image = formState.image,
+                    onValueChange = { newValue ->
+                        viewModel.updateForm { it.copy(image = newValue) }
+                    }
                 )
 
                 // input nome do objeto
@@ -77,8 +117,10 @@ fun CreateItemModal(
                     modifier = Modifier.align(Alignment.Start),
                     textLabel = "OBJETO *",
                     placeholder = "Ex: Mochila preta",
-                    value = objectInputValue,
-                    onValueChange = { objectInputValue = it },
+                    value = formState.title,
+                    onValueChange = { newValue ->
+                        viewModel.updateForm { it.copy(title = newValue) }
+                    },
                     icon = R.drawable.baseline_inventory_24
                 )
 
@@ -87,8 +129,10 @@ fun CreateItemModal(
                     modifier = Modifier.align(Alignment.Start),
                     textLabel = "DETALHES DO OBJETO",
                     placeholder = "Descreva detalhes como cor, marca, conteúdo...",
-                    value = detailsInputValue,
-                    onValueChange = { detailsInputValue = it },
+                    value = formState.description ?: "",
+                    onValueChange = { newValue ->
+                        viewModel.updateForm { it.copy(description = newValue) }
+                    },
                     icon = R.drawable.baseline_inventory_24,
                     isTextArea = true
                 )
@@ -97,9 +141,9 @@ fun CreateItemModal(
                 CustomSelectInput(
                     options = categories,
                     textLabel = "CATEGORIA DO OBJETO *",
-                    selectedText = inputCategoryValue,
-                    onSelectedOption = { selected ->
-                        inputCategoryValue = selected
+                    selectedText = formState.category,
+                    onSelectedOption = { newValue ->
+                        viewModel.updateForm { it.copy(category = newValue) }
                     },
                     icon = R.drawable.outline_border_all_24,
                     modifier = Modifier.align(Alignment.Start)
@@ -109,9 +153,9 @@ fun CreateItemModal(
                 CustomSelectInput(
                     options = locationOptions,
                     textLabel = "UNIDADE QI *",
-                    selectedText = inputLocationValue,
-                    onSelectedOption = { selected ->
-                        inputLocationValue = selected
+                    selectedText = formState.unit,
+                    onSelectedOption = { newValue ->
+                        viewModel.updateForm { it.copy(unit = newValue) }
                     },
                     icon = R.drawable.baseline_location_on_24,
                     modifier = Modifier.align(Alignment.Start)
@@ -122,8 +166,10 @@ fun CreateItemModal(
                     modifier = Modifier.align(Alignment.Start),
                     textLabel = "LOCAL EXATO ONDE ENCONTROU *",
                     placeholder = "Ex: Laboratório de Informática, Sala 302",
-                    value = inputExactLoc,
-                    onValueChange = { inputExactLoc = it },
+                    value = formState.location,
+                    onValueChange = { newValue ->
+                        viewModel.updateForm { it.copy(location = newValue) }
+                    },
                     icon = R.drawable.baseline_location_on_24
                 )
 
@@ -142,7 +188,9 @@ fun CreateItemModal(
                     Spacer(modifier = Modifier.width(10.dp))
                     PrimaryButton(
                         text = "Publicar",
-                        onClick = {}
+                        onClick = {
+                            viewModel.save(context)
+                        }
                     )
                 }
 
